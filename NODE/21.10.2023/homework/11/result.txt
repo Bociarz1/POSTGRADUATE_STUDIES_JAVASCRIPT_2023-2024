@@ -1,0 +1,4 @@
+Result of adding 200 and 100 is 300
+Result of subtracting 200 from 100 is 100
+Result of multiplying 200 and 100 is 300
+Result of dividing 200 by 100 is 2

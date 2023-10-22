@@ -1,0 +1,4 @@
+Result of adding 1 and 3.14 is 4.140000000000001
+Result of subtracting 1 from 3.14 is -2.14
+Result of multiplying 1 and 3.14 is 4.140000000000001
+Result of dividing 1 by 3.14 is 0.3184713375796178
