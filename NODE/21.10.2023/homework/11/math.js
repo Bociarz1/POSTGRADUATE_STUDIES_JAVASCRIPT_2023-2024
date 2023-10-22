@@ -11,7 +11,7 @@ const subtract = (a, b) => {
 };
 
 const multiply = (a, b) => {
-  const result = a + b;
+  const result = a * b;
   const textResult = `Result of multiplying ${a} and ${b} is ${result}`;
   saveResultInAnotherFile(textResult);
 };

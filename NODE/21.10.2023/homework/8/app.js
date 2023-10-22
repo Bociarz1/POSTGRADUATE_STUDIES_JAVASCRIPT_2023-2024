@@ -3,7 +3,7 @@
 const { readFileSync } = require('fs');
 const { add, subtract, multiply, divide } = require('./math');
 
-// flag" r -> read only
+// flag: r -> read only
 // encoding: utf8 -> read in utf8 standards
 const a = Number(readFileSync('./a.txt', { encoding: 'utf8', flag: 'r' }));
 const b = Number(readFileSync('./b.txt', { encoding: 'utf8', flag: 'r' }));
