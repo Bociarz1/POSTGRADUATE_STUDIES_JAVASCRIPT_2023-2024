@@ -1,4 +1,4 @@
-// 7. Stworzenie aplikacji która pozwoli na zapisanie całego obiektu do pliku. Z wykorzystaniem funkcji pozwalającej na przekonwertowanie obiektu na postać tekstową (JSON.stringify).
+// 8. 8. Rozszerzenie aplikacji z zadania 7 o wprowadzanie danych które chcemy zapisać w parametrach uruchamiania. Do wykorzystania zewnętrzny moduł `yargs`.
 const { parse } = require('./parser');
 const { name, lastName } = require('yargs').argv;
 

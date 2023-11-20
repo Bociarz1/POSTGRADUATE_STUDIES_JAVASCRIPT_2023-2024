@@ -1,14 +1,16 @@
-// 7. Stworzenie aplikacji która pozwoli na zapisanie całego obiektu do pliku. Z wykorzystaniem funkcji pozwalającej na przekonwertowanie obiektu na postać tekstową (JSON.stringify).
-const { parse } = require('./parser');
-const { name, lastName } = require('yargs').argv;
+// 7.  Program który wyświetla informacje o plikach i folderach w danej lokalizacji:
+// - użytkownik w parametrze podaje adres folderu (parametr wymagany) i rozmiar pliku (parametr opcjonalny)
+// - program wyświetla informacje o plikach w folderze: nazwa i wielkość:
+//     - jeżeli użytkownik poda w parametrze rozmiar pliku, to wyświetlamy listę plików, które są większe niż podany rozmiar
+//     - w przeciwnym wypadku, wyświetlamy listę plików których rozmiar jest większy niż średni rozmiar pliku w tym folderze
 
-if (name && lastName) {
-  const user = {
-    name,
-    lastName,
-  };
-  console.log(`new name is: ${name}`);
-  parse(user);
+// Pliki powinny być posortowane malejąco od największych do najmniejszych.
+
+const { getFilesDetails } = require('./parser');
+const { directory, size } = require('yargs').argv;
+
+if (directory) {
+  getFilesDetails(directory, size);
 } else {
   console.log('Brak parametrów!');
 }
