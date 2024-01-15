@@ -1,3 +1,5 @@
+// 1. Scale riddle. With 8 balls, ex.  [1,2,1,1,1,1,1,1] get position of the “heavy” ball.
+
 function setRiddleByRandom() {
   const riddle = [1, 1, 1, 1, 1, 1, 1, 1];
   const randomIndex = Math.floor(Math.random() * 8);
@@ -42,12 +44,12 @@ class Comparison {
 
 function checkHeavyRiddleInTwoSteps(riddle) {
   const firstComparison = new Comparison(
-    riddle,
-    [0, 1, 2],
-    [3, 4, 5],
-    'equal',
-    'left',
-    'right'
+    riddle, // riddleArray
+    [0, 1, 2], // lefSideIndexex
+    [3, 4, 5], // rightSideIndexed
+    'equal', // resultEqual
+    'left', // resultLeft
+    'right' // resultRight
   );
   const firstComparisonResult = firstComparison.compareTwoSides();
   switch (firstComparisonResult) {

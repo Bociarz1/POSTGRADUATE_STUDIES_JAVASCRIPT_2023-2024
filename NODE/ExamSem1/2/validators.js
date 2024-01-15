@@ -7,10 +7,6 @@ function isParamValid(argv) {
     console.log('Too little parameters! You have to apply only one parameter');
     return false;
   }
-  if (typeof argv[2] !== 'string') {
-    console.log('Parameter must be a type of string !');
-    return false;
-  }
   return true;
 }
 

@@ -3,7 +3,9 @@
 const colors = require('colors');
 const { isParamValid } = require('./validators');
 
-if (isParamValid(process.argv)) console.log(process.argv[2].rainbow);
+if (isParamValid(process.argv)) {
+  console.log(process.argv[2].rainbow);
+}
 
 // Sample invocation:
 // node app Hello

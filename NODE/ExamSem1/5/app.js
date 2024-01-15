@@ -55,7 +55,7 @@ const {
       amountOfRepos: userRepos.length ?? 0,
       allRepos: (userRepos || []).map((repo) => repo?.name),
       weather: weather
-        ? { main: weather.main, description: weather.description }
+        ? { main: 'no info' || weather.main, description: 'no info' || weather.description }
         : 'no info',
     };
     if (displayFollowers) {
