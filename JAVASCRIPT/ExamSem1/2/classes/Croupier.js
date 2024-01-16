@@ -1,4 +1,6 @@
 const Hand = require('pokersolver').Hand;
+const { PokerSolver } = require('./PokerSolveHelper');
+const { PokerCardLayouts } = require('./PokerCardLayouts');
 
 class Croupier {
   _croupierDeck = [];
@@ -28,6 +30,9 @@ class Croupier {
   checkHand(playersHands) {
     let roundResults = [];
     playersHands.forEach((playerHand, index) => {
+      const solver = new PokerCardLayouts(playerHand);
+      console.log('My result', solver.solve());
+      console.log('From lib results', Hand.solve(playerHand).name);
       const hand = Hand.solve(playerHand);
       hand.winnerName = `Player_${index + 1}`;
       roundResults.push(hand);
