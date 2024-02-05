@@ -1,0 +1,55 @@
+<div class="game__container relative">
+  <ngx-snake
+    #game
+    (gameOver)="gameOverListener()"
+    (foodEaten)="addPointListener()"
+    [boardWidth]="20"
+    [boardHeight]="20"
+  ></ngx-snake>
+
+  <div #keys class="game__keys absolute">
+    <div
+      #escBtn
+      class="key__button game__keys-esc"
+      (click)="handleKeyDown(createKeyboardEvent('Escape'), false)"
+    >
+      Esc
+    </div>
+    <div
+      #enterBtn
+      class="key__button game__keys-enter"
+      (click)="handleKeyDown(createKeyboardEvent('Enter'), false)"
+    >
+      Enter
+    </div>
+    <div
+      #wBtn
+      class="key__button game__keys--w-key"
+      (click)="handleKeyDown(createKeyboardEvent('w'), false)"
+    >
+      W
+    </div>
+    <div
+      #aBtn
+      class="key__button game__keys--a-key"
+      (click)="handleKeyDown(createKeyboardEvent('a'), false)"
+    >
+      A
+    </div>
+    <div
+      #sBtn
+      class="key__button game__keys--s-key"
+      (click)="handleKeyDown(createKeyboardEvent('s'), false)"
+    >
+      S
+    </div>
+    <div
+      #dBtn
+      class="key__button game__keys--d-key"
+      (click)="handleKeyDown(createKeyboardEvent('d'), false)"
+    >
+      D
+    </div>
+  </div>
+  <snake-popup />
+</div>

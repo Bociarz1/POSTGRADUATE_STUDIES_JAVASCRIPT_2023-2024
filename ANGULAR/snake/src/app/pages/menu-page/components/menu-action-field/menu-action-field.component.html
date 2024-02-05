@@ -1,0 +1,11 @@
+@if (fieldVisibility()) { @switch (fieldType()) { @case
+(MenuButtonActionEnum.START_GAME) {
+<h1 class="action-field__header">Enter you name and email</h1>
+<div class="action-field__container">
+  <menu-action-field-form />
+</div>
+} @case (MenuButtonActionEnum.SHOW_STATS) {
+<div class="action-field__table">
+  <player-ranking-table />
+</div>
+} } }

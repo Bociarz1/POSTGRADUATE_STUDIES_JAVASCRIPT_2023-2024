@@ -1,0 +1,22 @@
+@import "../../../../styles/positions.scss";
+
+.view-menu {
+  &__container {
+    height: 100%;
+
+    .buttons {
+      left: 50px;
+      bottom: 50px;
+      width: 400px;
+    }
+
+    .action-field {
+      right: 100px;
+    }
+
+    .logo {
+      left: 50px;
+      top: 100px;
+    }
+  }
+}

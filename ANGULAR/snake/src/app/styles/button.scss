@@ -1,0 +1,35 @@
+@import "./colors.scss";
+
+.menu-button {
+  width: 350px;
+  height: 70px;
+  font-size: 45px;
+  text-align: center;
+  text-transform: uppercase;
+  line-height: 70px;
+  cursor: pointer;
+
+  &:hover {
+    transition: 0.3s;
+    background-color: $pink;
+    box-shadow: 10px 5px 5px #297590;
+    transform: rotateY(30deg) rotateX(-25deg);
+  }
+}
+
+.primary-button {
+  height: 30px;
+  width: 250px;
+  color: $pink;
+  font-size: 24px;
+  text-transform: uppercase;
+  background-color: #fff;
+  border: 0px;
+
+  &:hover {
+    cursor: pointer;
+    transform: 0.3s;
+    background-color: $pink;
+    color: #fff;
+  }
+}

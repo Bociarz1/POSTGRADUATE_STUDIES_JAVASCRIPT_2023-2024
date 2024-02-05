@@ -1,0 +1,12 @@
+@import "../../../../styles/colors.scss";
+.logo {
+  width: 350px;
+  height: 100px;
+  font-size: 100px;
+  text-align: center;
+  text-transform: uppercase;
+  line-height: 10px;
+  color: $pink;
+  transform: rotateY(30deg) rotateX(-25deg);
+  font-weight: bold;
+}

@@ -1,0 +1,18 @@
+@import "../../../../styles/colors.scss";
+.action-field {
+  &__container {
+    width: 680px;
+    min-height: 234px;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 40px;
+  }
+  &__header {
+    background-color: $pink;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  &__table {
+    width: 690px;
+    height: 234px;
+  }
+}

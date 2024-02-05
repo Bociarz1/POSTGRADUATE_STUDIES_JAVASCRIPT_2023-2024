@@ -1,0 +1,7 @@
+<div class="app__container">
+  @if (snakeService.snakeView() === ViewEnum.MENU) {
+  <snake-view-menu class="menu" />
+  } @else {
+  <snake-view-game class="game" />
+  }
+</div>

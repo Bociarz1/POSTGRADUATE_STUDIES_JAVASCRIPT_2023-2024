@@ -1,0 +1,14 @@
+@if (visible()) {
+<div class="popup absolute">
+  <h1 class="popup__header">{{ popupContent.headerText }}</h1>
+  <div class="popup__content">
+    <p class="popup__content--text">{{ popupContent.descriptionText }}</p>
+    <button
+      (click)="handleBtnClick()"
+      class="popup_contant--button primary-button"
+    >
+      {{ popupContent.btnText }}
+    </button>
+  </div>
+</div>
+}

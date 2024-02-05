@@ -1,0 +1,7 @@
+<div class="menu-buttons-wrapper">
+  @for (button of menuButtons; track button.title) {
+  <div (click)="handleMenuButtonsClick(button.action)" class="menu-button">
+    {{ button.title }}
+  </div>
+  }
+</div>

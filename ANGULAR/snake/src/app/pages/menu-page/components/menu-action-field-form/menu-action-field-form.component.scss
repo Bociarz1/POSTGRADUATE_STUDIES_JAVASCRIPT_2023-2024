@@ -1,0 +1,47 @@
+@import "../../../../styles/colors.scss";
+@import "../../../../styles/button.scss";
+
+.form {
+  &-control {
+    display: grid;
+    height: 52px;
+    grid-template-columns: 100px 300px;
+    grid-template-areas:
+      "none error"
+      "label input";
+    align-items: center;
+    margin-bottom: 10px;
+
+    &__error {
+      grid-area: error;
+      color: $pink;
+      height: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 0 10px;
+      width: fit-content;
+    }
+
+    .label {
+      grid-area: label;
+      color: $secondary-color;
+      padding-right: 20px;
+      font-size: 30px;
+    }
+    .input {
+      grid-area: input;
+      font-size: 24px;
+      color: $pink;
+      text-transform: uppercase;
+      height: 30px;
+    }
+  }
+  &-button {
+    &__wrapper {
+      margin-top: 20px;
+      width: 400px;
+      display: flex;
+      justify-content: center;
+    }
+  }
+}

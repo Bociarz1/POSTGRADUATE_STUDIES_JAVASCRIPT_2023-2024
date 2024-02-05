@@ -1,0 +1,48 @@
+@import "../../../../styles/positions.scss";
+@import "../../../../styles/keys.scss";
+
+.game {
+  &__container {
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  &__keys {
+    display: grid;
+    justify-content: center;
+    margin-top: 10px;
+    bottom: -50px;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    grid-template-columns: 60px 60px 45px 45px 45px;
+    row-gap: 10px;
+    grid-template-rows: 40px 40px;
+    grid-template-areas:
+      "esc enter .wKey."
+      "esc enter aKey sKey dKey";
+    align-items: center;
+
+    &-esc {
+      grid-area: esc;
+    }
+    &--w-key {
+      grid-area: wKey;
+    }
+    &--a-key {
+      grid-area: aKey;
+    }
+    &--s-key {
+      grid-area: sKey;
+    }
+    &--d-key {
+      grid-area: dKey;
+    }
+    &-enter {
+      grid-area: enter;
+      justify-self: center;
+      width: auto;
+    }
+  }
+}

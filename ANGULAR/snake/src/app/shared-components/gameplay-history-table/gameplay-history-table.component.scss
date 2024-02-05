@@ -1,0 +1,92 @@
+@import "../../styles/colors.scss";
+.table {
+  &__container {
+    max-height: 100%;
+  }
+  &__grid {
+    width: 100%;
+    color: $secondary-color;
+
+    &--filters {
+      max-height: 30px;
+      display: inline-flex;
+      width: 100%;
+
+      .filter-item {
+        cursor: pointer;
+        white-space: nowrap;
+        background-color: $pink;
+        padding: 5px;
+        border-radius: 5px;
+        margin-right: 5px;
+      }
+
+      .filter-header {
+        white-space: nowrap;
+        color: $pink;
+        padding: 5px;
+        border-radius: 5px;
+        margin-right: 5px;
+        text-transform: uppercase;
+      }
+    }
+
+    &--header {
+      display: flex;
+      align-items: center;
+    }
+
+    th {
+      font-size: 24px;
+      background-color: $pink;
+      text-align: center;
+      text-transform: uppercase;
+    }
+    td {
+      color: $secondary-color;
+    }
+
+    .even-row {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+    .odd-row {
+      background-color: rgba(220, 231, 249, 0.8);
+    }
+  }
+}
+
+table tbody {
+  display: block;
+  max-height: 204px;
+  overflow-y: auto;
+}
+
+table thead,
+table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.sort-icon {
+  width: 30px;
+  height: 30px;
+  transform: translateY(2px);
+  cursor: pointer;
+}
+.no-result {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  font-size: 30px;
+  color: $pink;
+  margin-top: 10px;
+}
+
+.filter-active {
+  background-color: white !important;
+  color: $pink !important;
+}
