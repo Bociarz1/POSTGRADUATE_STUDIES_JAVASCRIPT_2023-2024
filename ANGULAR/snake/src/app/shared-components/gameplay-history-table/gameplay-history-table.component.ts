@@ -12,6 +12,7 @@ import { SnakeService } from '../../services/snake.service';
 import { CommonModule } from '@angular/common';
 import { GameStatusEnum } from '../../enums/game-status.enum';
 import { StatusPipe } from '../../pipes/status.pipe';
+import { FilterResultsPipe } from '../../pipes/filter-results.pipe';
 
 @Component({
   selector: 'app-gameplay-history-table',
@@ -19,7 +20,7 @@ import { StatusPipe } from '../../pipes/status.pipe';
   templateUrl: './gameplay-history-table.component.html',
   styleUrl: './gameplay-history-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, StatusPipe],
+  imports: [CommonModule, StatusPipe, FilterResultsPipe],
 })
 export class GameplayHistoryTableComponent {
   protected dataSource: Signal<IGameplayHistory[]> = computed(() => {
@@ -73,24 +74,24 @@ export class GameplayHistoryTableComponent {
     if (type === 'normal') return this.sortedDataSource.set([]);
     this.sortedDataSource.set(sortedData);
   }
-
   protected filter(actionType: GameStatusEnum): void {
     this.sortedDataSource.set([]);
     this.filteredValue = actionType;
-    if (actionType === GameStatusEnum.UNKNOWN) {
-      this.isNoResult = false;
-      this.filteredDataSource.set([]);
-      return;
-    }
-    const filteredData: IGameplayHistory[] = this.snakeService
-      .gameplayHistory()
-      .filter((item: IGameplayHistory) => {
-        return item.action === actionType;
-      });
+    // if (actionType === GameStatusEnum.UNKNOWN) {
+    //   this.isNoResult = false;
+    //   this.filteredDataSource.set([]);
+    //   return;
+    // }
+    // // pipe ktory przyjmie tablice settingsw params , jak filtrować , jakei wyswietlać
+    // const filteredData: IGameplayHistory[] = this.snakeService
+    //   .gameplayHistory()
+    //   .filter((item: IGameplayHistory) => {
+    //     return item.action === actionType;
+    //   });
 
-    if (filteredData.length === 0) {
-      this.isNoResult = true;
-    }
-    this.filteredDataSource.set(filteredData);
+    // if (filteredData.length === 0) {
+    //   this.isNoResult = true;
+    // }
+    // this.filteredDataSource.set(filteredData);
   }
 }

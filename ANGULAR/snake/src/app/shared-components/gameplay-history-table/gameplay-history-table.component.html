@@ -78,8 +78,9 @@
     <tbody>
       @if(this.dataSource().length === 0) {
       <div class="no-result">No result</div>
-      } @else { @for (item of dataSource(); track item.index; let index =
-      $index; let isEven=$even) {
+      <!-- zastosuj pipe -->
+      } @else { @for (item of dataSource() | filter : filteredValue ; track
+      item.index; let index = $index; let isEven=$even) {
       <tr [class]="isEven ? 'even-row' : 'odd-row'">
         <td>
           {{ item.index }}
