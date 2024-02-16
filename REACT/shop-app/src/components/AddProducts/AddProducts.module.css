@@ -1,0 +1,7 @@
+.add-products {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  border-bottom: 1px white solid;
+}
