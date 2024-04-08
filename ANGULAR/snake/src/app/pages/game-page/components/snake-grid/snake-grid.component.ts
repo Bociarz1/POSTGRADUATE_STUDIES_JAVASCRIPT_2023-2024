@@ -1,22 +1,25 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  computed,
   DestroyRef,
   ElementRef,
+  inject,
+  Injector,
   OnInit,
   Renderer2,
   Signal,
   ViewChild,
-  computed,
-  effect,
 } from '@angular/core';
-import { NgxSnakeComponent, NgxSnakeModule } from 'ngx-snake';
-import { fromEvent } from 'rxjs';
-import { PopupComponent } from '../popup/popup.component';
-import { SnakeService } from '../../../../services/snake.service';
-import { GameStatusEnum } from '../../../../enums/game-status.enum';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import {NgxSnakeComponent, NgxSnakeModule} from 'ngx-snake';
+import {fromEvent} from 'rxjs';
+import {PopupComponent} from '../popup/popup.component';
+import {SnakeService} from '../../../../services/snake.service';
+import {GameStatusEnum} from '../../../../enums/game-status.enum';
+import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
+import {GameThemeEnum} from "../../../../enums/game-theme.enum";
+import {PlayerService} from "../../../../services/player.service";
+import {ThemeService} from "../../../../services/theme.service";
 
 @Component({
   selector: 'snake-grid',
@@ -27,11 +30,12 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SnakeGridComponent implements OnInit {
-  actionBtnDisabled: Signal<boolean> = computed(
-    () => this.snakeService.gameStatus() !== GameStatusEnum.STARTED
+  protected actionBtnDisabled: Signal<boolean> = computed(
+    () => this.playerService.gameStatus() !== GameStatusEnum.STARTED
   );
   private prevGameStatus!: GameStatusEnum;
-  @ViewChild('game') snakeRef!: NgxSnakeComponent;
+  @ViewChild('game') snakeComponent!: NgxSnakeComponent;
+  @ViewChild('snakeGrid') snakeGrid!: ElementRef;
   @ViewChild('enterBtn') enterBtn!: ElementRef;
   @ViewChild('escBtn') escBtn!: ElementRef;
   @ViewChild('wBtn') wBtn!: ElementRef;
@@ -39,17 +43,21 @@ export class SnakeGridComponent implements OnInit {
   @ViewChild('sBtn') sBtn!: ElementRef;
   @ViewChild('dBtn') dBtn!: ElementRef;
 
-  constructor(
-    private destroyRef: DestroyRef,
-    protected snakeService: SnakeService,
-    private renderer: Renderer2
-  ) {
+  private destroyRef: DestroyRef = inject(DestroyRef);
+  private renderer: Renderer2 = inject(Renderer2);
+  private injector: Injector = inject(Injector);
+  private playerService: PlayerService = inject(PlayerService);
+  private snakeService: SnakeService = inject(SnakeService);
+  private themeService: ThemeService = inject(ThemeService);
+
+  constructor() {
     this.gameStatusChangeListener();
   }
 
   public ngOnInit(): void {
     this.keyDownListener();
     this.keyUpListener();
+    this.changeThemeListener();
   }
 
   private keyDownListener(): void {
@@ -60,6 +68,7 @@ export class SnakeGridComponent implements OnInit {
         this.handleKeyDown(event as KeyboardEvent);
       });
   }
+
   private keyUpListener(): void {
     const keyDownEvent$ = fromEvent(document, 'keyup');
     keyDownEvent$
@@ -70,10 +79,10 @@ export class SnakeGridComponent implements OnInit {
   }
 
   private gameStatusChangeListener(): void {
-    toObservable(this.snakeService.gameStatus)
+    toObservable(this.playerService.gameStatus)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((status: GameStatusEnum) => {
-        this.snakeService.noticePlayerActionInStorage();
+        this.playerService.saveActionInStorage();
         if (
           this.prevGameStatus === GameStatusEnum.READY &&
           status === GameStatusEnum.STARTED
@@ -89,8 +98,8 @@ export class SnakeGridComponent implements OnInit {
     event: KeyboardEvent,
     addClass: boolean = true
   ): void {
-    const { key } = event || {};
-    if (!key && !this.snakeRef) return;
+    const {key} = event || {};
+    if (!key && !this.snakeComponent) return;
     switch (key) {
       case 'w':
         if (addClass) {
@@ -120,8 +129,8 @@ export class SnakeGridComponent implements OnInit {
         if (addClass) {
           this.renderer.addClass(this.enterBtn.nativeElement, 'key-hover');
         }
-        if (this.snakeService.gameStatus() === GameStatusEnum.STARTED) return;
-        if (this.snakeService.gameStatus() === GameStatusEnum.READY) {
+        if (this.playerService.gameStatus() === GameStatusEnum.STARTED) return;
+        if (this.playerService.gameStatus() === GameStatusEnum.READY) {
           this.handleRestartGame();
         }
         this.handleStartGame();
@@ -130,15 +139,15 @@ export class SnakeGridComponent implements OnInit {
         if (addClass) {
           this.renderer.addClass(this.escBtn.nativeElement, 'key-hover');
         }
-        if (this.snakeService.gameStatus() !== GameStatusEnum.STARTED) return;
+        if (this.playerService.gameStatus() !== GameStatusEnum.STARTED) return;
         this.handlePausedGame();
         break;
     }
   }
 
   private handleKeyUp(event: KeyboardEvent): void {
-    const { key } = event || {};
-    if (!key && !this.snakeRef) return;
+    const {key} = event || {};
+    if (!key && !this.snakeComponent) return;
     switch (key) {
       case 'w':
         this.renderer.removeClass(this.wBtn.nativeElement, 'key-hover');
@@ -160,42 +169,51 @@ export class SnakeGridComponent implements OnInit {
         break;
     }
   }
+
   protected gameOverListener(): void {
-    this.snakeService.gameStatus.set(GameStatusEnum.READY);
-    this.snakeService.noticeScoreInStorage();
+    this.playerService.gameStatus.set(GameStatusEnum.READY);
+    this.snakeService.postNewScore();
+    this.playerService.saveScoreInStorage()
   }
+
   protected addPointListener(): void {
-    this.snakeService.gameScore.update((prev) => prev + 1);
+    this.playerService.score.update((prev) => prev + 1);
   }
 
   protected handleSnakeMoveUp(): void {
-    if (this.snakeService.gameStatus() !== GameStatusEnum.STARTED) return;
-    this.snakeRef.actionUp();
+    if (this.playerService.gameStatus() !== GameStatusEnum.STARTED) return;
+    this.snakeComponent.actionUp();
   }
+
   protected handleSnakeMoveDown(): void {
-    if (this.snakeService.gameStatus() !== GameStatusEnum.STARTED) return;
-    this.snakeRef.actionDown();
+    if (this.playerService.gameStatus() !== GameStatusEnum.STARTED) return;
+    this.snakeComponent.actionDown();
   }
+
   protected handleSnakeMoveRight(): void {
-    if (this.snakeService.gameStatus() !== GameStatusEnum.STARTED) return;
-    this.snakeRef.actionRight();
+    if (this.playerService.gameStatus() !== GameStatusEnum.STARTED) return;
+    this.snakeComponent.actionRight();
   }
+
   protected handleSnakeMoveLeft(): void {
-    if (this.snakeService.gameStatus() !== GameStatusEnum.STARTED) return;
-    this.snakeRef.actionLeft();
+    if (this.playerService.gameStatus() !== GameStatusEnum.STARTED) return;
+    this.snakeComponent.actionLeft();
   }
+
   protected handleRestartGame(): void {
-    this.snakeRef.actionReset();
-    this.snakeService.gameScore.set(0);
-    this.snakeService.gameStatus.set(GameStatusEnum.STARTED);
+    this.snakeComponent.actionReset();
+    this.playerService.score.set(0);
+    this.playerService.gameStatus.set(GameStatusEnum.STARTED);
   }
+
   protected handleStartGame(): void {
-    this.snakeRef.actionStart();
-    this.snakeService.gameStatus.set(GameStatusEnum.STARTED);
+    this.snakeComponent.actionStart();
+    this.playerService.gameStatus.set(GameStatusEnum.STARTED);
   }
+
   protected handlePausedGame(): void {
-    this.snakeRef.actionStop();
-    this.snakeService.gameStatus.set(GameStatusEnum.PAUSED);
+    this.snakeComponent.actionStop();
+    this.playerService.gameStatus.set(GameStatusEnum.PAUSED);
   }
 
   protected createKeyboardEvent(event: string): KeyboardEvent {
@@ -207,5 +225,21 @@ export class SnakeGridComponent implements OnInit {
       bubbles: true,
       cancelable: true,
     });
+  }
+
+  private changeThemeListener(): void {
+    toObservable(this.themeService.theme, {
+      injector: this.injector
+    }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((theme: GameThemeEnum) => {
+      this.changeSnakeGridTheme(theme);
+    })
+  }
+
+  protected changeSnakeGridTheme(theme: GameThemeEnum): void {
+    if (theme === GameThemeEnum.HIGH_CONTRAST) {
+      this.renderer.addClass(this.snakeGrid.nativeElement, 'snake-high-contrast')
+    } else {
+      this.renderer.removeClass(this.snakeGrid.nativeElement, 'snake-high-contrast')
+    }
   }
 }

@@ -1,18 +1,9 @@
-import {
-  Injectable,
-  Signal,
-  WritableSignal,
-  computed,
-  effect,
-  signal,
-} from '@angular/core';
-import { MenuButtonActionEnum } from '../enums/menu-buttons.enum.ts.js';
-import { ViewEnum } from '../enums/view.enum.js';
-import { GameStatusEnum } from '../enums/game-status.enum.js';
-import { IGameRanking } from '../interfaces/game-ranking.interface.js';
-import { fromEvent } from 'rxjs';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { IGameplayHistory } from '../interfaces/gameplay-history.interface.js';
+import {inject, Injectable, signal, WritableSignal,} from '@angular/core';
+import {MenuButtonActionEnum} from '../enums/menu-buttons.enum.ts.js';
+import {IGetScoresResponse, IPostScoresRequest} from "../interfaces/api-response.interface";
+import {ApiService} from "./api.service";
+import {catchError, map, of} from "rxjs";
+import {PlayerService} from "./player.service";
 
 @Injectable({
   providedIn: 'root',
@@ -21,38 +12,45 @@ export class SnakeService {
   public menuAction: WritableSignal<MenuButtonActionEnum> = signal(
     MenuButtonActionEnum.SHOW_MENU
   );
-  public snakeView: WritableSignal<ViewEnum> = signal(ViewEnum.MENU);
-  public gameStatus: WritableSignal<GameStatusEnum> = signal(
-    GameStatusEnum.INIT
-  );
-  public gameScore: WritableSignal<number> = signal(0);
-  public playerName: string = '';
-  public playerEmail: string = '';
+  public topPlayersRanking: WritableSignal<IGetScoresResponse[]> = signal([]);
 
-  public playersRanking: WritableSignal<IGameRanking[]> = signal([]);
-  public gameplayHistory: WritableSignal<IGameplayHistory[]> = signal([]);
-  constructor() {}
+  private apiService: ApiService = inject(ApiService);
+  private playerService: PlayerService = inject(PlayerService);
 
-  public noticeScoreInStorage(): void {
-    const data = {
-      index: this.playersRanking().length,
-      playerName: this.playerName,
-      playerEmail: this.playerEmail,
-      score: this.gameScore(),
-      endGameTime: new Date(),
-    };
-    this.playersRanking.update((prev) => [...prev, data]);
-    window.localStorage.setItem(
-      'playersRanking',
-      JSON.stringify(this.playersRanking())
-    );
+  public getScores(): void {
+    this.apiService.getScores()
+      .pipe(
+        catchError(() => of()),
+        map((data: IGetScoresResponse[]) => data.sort((a: IGetScoresResponse, b: IGetScoresResponse) => {
+          return b.score - a.score
+        })),
+        map((data: IGetScoresResponse[]) => data.map((item: IGetScoresResponse, index: number) => {
+          item.index = index + 1;
+          return item;
+        })),
+        map((data: IGetScoresResponse[]) => data.splice(0, 10)),
+      )
+      .subscribe((res: IGetScoresResponse[]) => {
+        this.topPlayersRanking.set(res)
+      })
   }
-  public noticePlayerActionInStorage(): void {
-    const data = {
-      index: this.gameplayHistory().length,
-      action: this.gameStatus(),
-      date: new Date(),
-    };
-    this.gameplayHistory.update((prev) => [...prev, data]);
+
+  public postNewScore(): void {
+    const payload: IPostScoresRequest = {
+      name: this.playerService.name(),
+      game: "tetris",
+      score: this.playerService.score(),
+      authToken: this.playerService.authToken()
+    }
+    this.apiService.addScore(payload)
+      .pipe(
+        catchError(() => of()),
+        map((data: IGetScoresResponse[]) => data.splice(0, 10))
+      )
+      .subscribe((res: IGetScoresResponse[]) => {
+        this.topPlayersRanking.set(res)
+      })
   }
+
+
 }

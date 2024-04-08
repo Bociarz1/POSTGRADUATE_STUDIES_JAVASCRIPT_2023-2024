@@ -1,6 +1,6 @@
-export enum StatsColumnsEnum {
+export enum PlayerScoresColumnsEnum {
   INDEX = 'index',
-  NAME = 'playerName',
+  NAME = 'name',
   SCORE = 'score',
   TIME_PLAYING = 'endGameTime',
 }

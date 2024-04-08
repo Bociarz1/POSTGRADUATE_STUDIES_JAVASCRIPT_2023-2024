@@ -1,16 +1,10 @@
-import {
-  Component,
-  OnInit,
-  Signal,
-  WritableSignal,
-  computed,
-  effect,
-  signal,
-} from '@angular/core';
-import { SnakeService } from '../../services/snake.service';
-import { CommonModule } from '@angular/common';
-import { StatsColumnsEnum } from '../../enums/stats-columns.enum';
-import { IGameRanking } from '../../interfaces/game-ranking.interface';
+import {Component, computed, DestroyRef, inject, OnInit, Signal, signal, WritableSignal,} from '@angular/core';
+import {SnakeService} from '../../services/snake.service';
+import {CommonModule} from '@angular/common';
+import {TopPlayersColumnsEnum} from '../../enums/top-players-columns.enum';
+import {IGameRanking} from '../../interfaces/game-ranking.interface';
+import {interval} from "rxjs";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'player-ranking-table',
@@ -23,33 +17,37 @@ export class PlayerRankingTableComponent implements OnInit {
   protected dataSource: Signal<IGameRanking[]> = computed(() => {
     if (this.sortedDataSource().length > 0) {
       return this.sortedDataSource();
-    } else return this.snakeService.playersRanking();
+    } else {
+      return this.snakeService.topPlayersRanking()
+    }
+    ;
   });
-  protected sortedColumn!: StatsColumnsEnum;
+  protected sortedColumn!: TopPlayersColumnsEnum;
   protected sortedDataSource: WritableSignal<IGameRanking[]> = signal([]);
-  protected StatsColumnsEnum = StatsColumnsEnum;
+  protected StatsColumnsEnum = TopPlayersColumnsEnum;
 
-  constructor(protected snakeService: SnakeService) {}
+  protected snakeService: SnakeService = inject(SnakeService);
+  protected destroyRef: DestroyRef = inject(DestroyRef);
 
   public ngOnInit(): void {
-    this.localStorageListener();
+    this.snakeService.getScores();
+    this.fetchScoresInInterval();
   }
 
   protected sort(
-    column: StatsColumnsEnum,
+    column: TopPlayersColumnsEnum,
     type: 'asc' | 'desc' | 'normal'
   ): void {
+    if (type === 'normal') return this.sortedDataSource.set([]);
+
     this.sortedColumn = column;
-    const sortedData: IGameRanking[] = this.snakeService
-      .playersRanking()
+    const sortedData: IGameRanking[] = [...this.snakeService
+      .topPlayersRanking()]
       .sort((a: IGameRanking, b: IGameRanking) => {
-        if (type === 'normal') return -1;
         let aValue!: string | number;
         let bValue!: string | number;
         if (
-          column === StatsColumnsEnum.NAME ||
-          column === StatsColumnsEnum.TIME_PLAYING
-        ) {
+          column === TopPlayersColumnsEnum.NAME) {
           aValue = a[column]?.toString() as string;
           bValue = b[column]?.toString() as string;
         } else {
@@ -59,15 +57,12 @@ export class PlayerRankingTableComponent implements OnInit {
         if (aValue === bValue) return 0;
         return (type === 'asc' ? aValue < bValue : bValue < aValue) ? -1 : 1;
       });
-    if (type === 'normal') return this.sortedDataSource.set([]);
     this.sortedDataSource.set(sortedData);
   }
 
-  private localStorageListener(): void {
-    let storage = localStorage.getItem('playersRanking');
-    storage = JSON.parse(storage ?? '');
-    if (typeof storage !== 'string' && storage !== null) {
-      this.snakeService.playersRanking.set(storage);
-    }
+  private fetchScoresInInterval(): void {
+    interval(30000,).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.snakeService.getScores();
+    })
   }
 }

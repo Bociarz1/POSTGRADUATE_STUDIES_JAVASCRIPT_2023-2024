@@ -1,19 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  Signal,
-  WritableSignal,
-  computed,
-  signal,
-} from '@angular/core';
-import { SnakeService } from '../../../../services/snake.service';
-import { GameStatusEnum } from '../../../../enums/game-status.enum';
-import { IPopupContent } from '../../../../interfaces/popup.interface';
-import { popupContent } from '../../../../consts/popup.consts';
+import {ChangeDetectionStrategy, Component, computed, inject, Signal,} from '@angular/core';
+import {SnakeService} from '../../../../services/snake.service';
+import {GameStatusEnum} from '../../../../enums/game-status.enum';
+import {IPopupContent} from '../../../../interfaces/popup.interface';
+import {popupContent} from '../../../../consts/popup.consts';
+import {PlayerService} from "../../../../services/player.service";
 
 @Component({
   selector: 'snake-popup',
@@ -26,16 +16,19 @@ import { popupContent } from '../../../../consts/popup.consts';
 export class PopupComponent {
   protected popupContent!: IPopupContent;
   protected visible: Signal<boolean> = computed(() => {
-    this.popupContent = popupContent[this.snakeService.gameStatus()];
-    if (this.snakeService.gameStatus() === GameStatusEnum.INIT) {
+    this.popupContent = popupContent[this.playerService.gameStatus()];
+    if (this.playerService.gameStatus() === GameStatusEnum.INIT) {
       this.popupContent.headerText =
         this.popupContent.headerText +
-        (this.snakeService.playerName || ' Player');
+        (this.playerService.name() || ' Player');
     }
-    return this.snakeService.gameStatus() !== GameStatusEnum.STARTED;
+    return this.playerService.gameStatus() !== GameStatusEnum.STARTED;
   });
-  constructor(private snakeService: SnakeService) {}
+
+  private snakeService: SnakeService = inject(SnakeService);
+  private playerService: PlayerService = inject(PlayerService);
+
   protected handleBtnClick() {
-    this.snakeService.gameStatus.set(GameStatusEnum.STARTED);
+    this.playerService.gameStatus.set(GameStatusEnum.STARTED);
   }
 }

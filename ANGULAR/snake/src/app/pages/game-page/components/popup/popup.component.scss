@@ -1,6 +1,7 @@
 @import "../../../../styles/colors.scss";
 @import "../../../../styles/button.scss";
 @import "../../../../styles/positions.scss";
+
 .popup {
   z-index: 1;
   top: 50%;
@@ -8,10 +9,11 @@
   transform: translate(-50%, -50%);
 
   &__header {
-    background-color: $pink;
+    background-color: $textColor;
     text-align: center;
     text-transform: uppercase;
   }
+
   &__content {
     display: flex;
     flex-direction: column;
@@ -29,6 +31,7 @@
       padding-right: 20px;
       font-size: 30px;
     }
+
     &__button {
     }
   }

@@ -1,48 +1,7 @@
 <div class="table__container">
-  <h1 class="table__header">Your activity</h1>
+  <h1 class="table__header">Your scores</h1>
   <table class="table__grid">
     <thead>
-    <tr class="table__grid--filters">
-      <span class="filter-header">Filter by actions:</span>
-      <span
-        class="filter-item"
-        [ngClass]="{
-            'filter-active': filteredValue === GameStatusEnum.UNKNOWN
-          }"
-        (click)="filter(GameStatusEnum.UNKNOWN)"
-      >All</span
-      >
-      <span
-        [ngClass]="{ 'filter-active': filteredValue === GameStatusEnum.INIT }"
-        class="filter-item"
-        (click)="filter(GameStatusEnum.INIT)"
-      >Start playing</span
-      >
-      <span
-        [ngClass]="{
-            'filter-active': filteredValue === GameStatusEnum.READY
-          }"
-        class="filter-item"
-        (click)="filter(GameStatusEnum.READY)"
-      >Game over</span
-      >
-      <span
-        [ngClass]="{
-            'filter-active': filteredValue === GameStatusEnum.STARTED
-          }"
-        class="filter-item"
-        (click)="filter(GameStatusEnum.STARTED)"
-      >Start next game</span
-      >
-      <span
-        [ngClass]="{
-            'filter-active': filteredValue === GameStatusEnum.PAUSED
-          }"
-        class="filter-item"
-        (click)="filter(GameStatusEnum.PAUSED)"
-      >Paused</span
-      >
-    </tr>
     <tr>
       <th>
         <div class="table__grid--header index-header">
@@ -54,10 +13,10 @@
           <ng-container
             [ngTemplateOutlet]="sortTemplate"
             [ngTemplateOutletContext]="{
-                data: { type: 'normal', column: GameplayColumnsEnum.ACTION }
+                data: { type: 'normal', column: StatsColumnsEnum.NAME }
               }"
           />
-          Action
+          Name
         </div>
       </th>
       <th>
@@ -65,27 +24,41 @@
           <ng-container
             [ngTemplateOutlet]="sortTemplate"
             [ngTemplateOutletContext]="{
-                data: { type: 'normal', column: GameplayColumnsEnum.DATE }
+                data: { type: 'normal', column: StatsColumnsEnum.SCORE }
               }"
           />
-          Date
+          Score
+        </div>
+      </th>
+      <th>
+        <div class="table__grid--header">
+          <ng-container
+            [ngTemplateOutlet]="sortTemplate"
+            [ngTemplateOutletContext]="{
+                data: { type: 'normal', column: StatsColumnsEnum.TIME_PLAYING }
+              }"
+          />
+          time playing
         </div>
       </th>
     </tr>
     </thead>
     <tbody>
-      @if (this.dataSource().length === 0) {
+      @if (dataSource().length === 0) {
         <div class="no-result">No result</div>
       } @else {
-        @for (item of dataSource() | filter : filteredValue; track
-          item.index; let index = $index; let isEven = $even) {
+        @for (item of dataSource(); track item.endGameTime; let index =
+          $index; let isEven = $even; let isOdd = $odd) {
           <tr [class]="isEven ? 'even-row' : 'odd-row'">
             <td>
               {{ item?.index }}
             </td>
-            <td>{{ item.action | status }}</td>
+            <td>{{ item.name }}</td>
             <td>
-              {{ item.date | date : "medium" }}
+              {{ item.score }}
+            </td>
+            <td>
+              {{ item.endGameTime | date : "medium" }}
             </td>
           </tr>
         }

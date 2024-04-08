@@ -1,18 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Signal,
-  WritableSignal,
-  computed,
-  signal,
-} from '@angular/core';
-import { IGameplayHistory } from '../../interfaces/gameplay-history.interface';
-import { GameplayColumnsEnum } from '../../enums/gameplay-columns.enum';
-import { SnakeService } from '../../services/snake.service';
-import { CommonModule } from '@angular/common';
-import { GameStatusEnum } from '../../enums/game-status.enum';
-import { StatusPipe } from '../../pipes/status.pipe';
-import { FilterResultsPipe } from '../../pipes/filter-results.pipe';
+import {ChangeDetectionStrategy, Component, computed, inject, signal, Signal, WritableSignal,} from '@angular/core';
+import {IGameplayHistory} from '../../interfaces/gameplay-history.interface';
+import {GameplayColumnsEnum} from '../../enums/gameplay-columns.enum';
+import {CommonModule} from '@angular/common';
+import {GameStatusEnum} from '../../enums/game-status.enum';
+import {StatusPipe} from '../../pipes/status.pipe';
+import {FilterResultsPipe} from '../../pipes/filter-results.pipe';
+import {PlayerService} from "../../services/player.service";
 
 @Component({
   selector: 'app-gameplay-history-table',
@@ -34,7 +27,7 @@ export class GameplayHistoryTableComponent {
     if (this.filteredDataSource().length > 0) {
       return this.filteredDataSource();
     }
-    return this.snakeService.gameplayHistory();
+    return this.playerService.gameplayHistory();
   });
   protected filteredValue: GameStatusEnum = GameStatusEnum.UNKNOWN;
   protected sortedColumn!: GameplayColumnsEnum;
@@ -44,7 +37,7 @@ export class GameplayHistoryTableComponent {
   protected GameplayColumnsEnum = GameplayColumnsEnum;
   protected GameStatusEnum = GameStatusEnum;
 
-  constructor(protected snakeService: SnakeService) {}
+  protected playerService: PlayerService = inject(PlayerService);
 
   protected sort(
     column: GameplayColumnsEnum,
@@ -54,8 +47,8 @@ export class GameplayHistoryTableComponent {
     const sortedArray =
       this.filteredDataSource().length > 0
         ? this.filteredDataSource()
-        : this.snakeService.gameplayHistory();
-    const sortedData: IGameplayHistory[] = sortedArray.sort(
+        : this.playerService.gameplayHistory();
+    const sortedData: IGameplayHistory[] = [...sortedArray].sort(
       (a: IGameplayHistory, b: IGameplayHistory) => {
         if (type === 'normal') return -1;
         let aValue!: string | number;
@@ -74,6 +67,7 @@ export class GameplayHistoryTableComponent {
     if (type === 'normal') return this.sortedDataSource.set([]);
     this.sortedDataSource.set(sortedData);
   }
+
   protected filter(actionType: GameStatusEnum): void {
     this.sortedDataSource.set([]);
     this.filteredValue = actionType;

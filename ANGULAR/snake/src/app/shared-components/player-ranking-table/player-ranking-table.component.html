@@ -1,92 +1,83 @@
 <div class="table__container">
+  <h1 class="table__header">Top players</h1>
   <table class="table__grid">
     <thead>
-      <tr>
-        <th>
-          <div class="table__grid--header">
-            <ng-container
-              [ngTemplateOutlet]="sortTemplate"
-              [ngTemplateOutletContext]="{
-                data: { type: 'normal', column: StatsColumnsEnum.INDEX }
-              }"
-            />#
-          </div>
-        </th>
-        <th>
-          <div class="table__grid--header">
-            <ng-container
-              [ngTemplateOutlet]="sortTemplate"
-              [ngTemplateOutletContext]="{
+    <tr>
+      <th>
+        <div class="table__grid--header index-header">
+          #
+        </div>
+      </th>
+      <th>
+        <div class="table__grid--header">
+          <ng-container
+            [ngTemplateOutlet]="sortTemplate"
+            [ngTemplateOutletContext]="{
                 data: { type: 'normal', column: StatsColumnsEnum.NAME }
               }"
-            />Name
-          </div>
-        </th>
-        <th>
-          <div class="table__grid--header">
-            <ng-container
-              [ngTemplateOutlet]="sortTemplate"
-              [ngTemplateOutletContext]="{
+          />
+          Name
+        </div>
+      </th>
+      <th>
+        <div class="table__grid--header">
+          <ng-container
+            [ngTemplateOutlet]="sortTemplate"
+            [ngTemplateOutletContext]="{
                 data: { type: 'normal', column: StatsColumnsEnum.SCORE }
               }"
-            />Score
-          </div>
-        </th>
-        <th>
-          <div class="table__grid--header">
-            <ng-container
-              [ngTemplateOutlet]="sortTemplate"
-              [ngTemplateOutletContext]="{
-                data: { type: 'normal', column: StatsColumnsEnum.TIME_PLAYING }
-              }"
-            />time playing
-          </div>
-        </th>
-      </tr>
+          />
+          Score
+        </div>
+      </th>
+    </tr>
     </thead>
     <tbody>
-      @if(dataSource().length === 0) {
-      <div class="no-result">No result</div>
-      } @else { @for (item of dataSource(); track item.endGameTime; let index =
-      $index; let isEven = $even; let isOdd=$odd) {
-      <tr [class]="isEven ? 'even-row' : 'odd-row'">
-        <td>
-          {{ item.index }}
-        </td>
-        <td>>{{ item.playerName }}</td>
-        <td>
-          {{ item.score }}
-        </td>
-        <td>
-          {{ item.endGameTime | date : "medium" }}
-        </td>
-      </tr>
-      } }
+      @if (dataSource().length === 0) {
+        <div class="no-result">No result</div>
+      } @else {
+        @for (item of dataSource(); track item; let index =
+          $index; let isEven = $even; let isOdd = $odd) {
+          <tr [class]="isEven ? 'even-row' : 'odd-row'">
+            <td>
+              {{ item?.index }}
+            </td>
+            <td>{{ item.name }}</td>
+            <td>
+              {{ item.score }}
+            </td>
+          </tr>
+        }
+      }
     </tbody>
   </table>
 
   <ng-template #sortTemplate let-data="data">
-    @switch (data.type) { @case ('normal') {
-    <span (click)="sort(data.column, 'asc'); data.type = 'asc'">
-      <img src="../../../assets/img/normal.svg" class="sort-icon" />
+    @switch (data.type) {
+      @case ('normal') {
+        <span (click)="sort(data.column, 'asc'); data.type = 'asc'">
+      <img src="../../../assets/img/normal.svg" class="sort-icon"/>
     </span>
-    } @case ('asc') {
-    <span (click)="sort(data.column, 'desc'); data.type = 'desc'">
+      }
+      @case ('asc') {
+        <span (click)="sort(data.column, 'desc'); data.type = 'desc'">
       @if (data.column === sortedColumn) {
-      <img src="../../../assets/img/asc.svg" class="sort-icon" />
+        <img src="../../../assets/img/asc.svg" class="sort-icon"/>
       } @else {
-      <img src="../../../assets/img/normal.svg" class="sort-icon" />
+        <img src="../../../assets/img/normal.svg" class="sort-icon"/>
       }
     </span>
 
-    } @case ('desc') {
-    <span (click)="sort(data.column, 'normal'); data.type = 'normal'">
+      }
+      @case ('desc') {
+        <span (click)="sort(data.column, 'normal'); data.type = 'normal'">
       @if (data.column === sortedColumn) {
-      <img src="../../../assets/img/desc.svg" class="sort-icon" />
+        <img src="../../../assets/img/desc.svg" class="sort-icon"/>
       } @else {
-      <img src="../../../assets/img/normal.svg" class="sort-icon" />
+        <img src="../../../assets/img/normal.svg" class="sort-icon"/>
       }
     </span>
-    } }
+      }
+    }
   </ng-template>
 </div>

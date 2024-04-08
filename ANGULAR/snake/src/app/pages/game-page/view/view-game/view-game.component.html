@@ -1,4 +1,4 @@
-<div class="view-game__container">
+<div class="view-game__container relative">
   <ng-container [ngTemplateOutlet]="navbar"></ng-container>
   <ng-container [ngTemplateOutlet]="mainGrid"></ng-container>
 </div>
@@ -8,23 +8,27 @@
     <div (click)="goToMenu()" class="navbar-button border-right">Menu</div>
     <div class="navbar-text border-right">
       Game score:
-      <span class="navbar-value">{{ snakeService.gameScore() }}</span>
+      <span class="navbar-value">{{ playerService.score() }}</span>
     </div>
     <div class="navbar-text border-right">
       Status:
-      <span class="navbar-value">{{ snakeService.gameStatus() | status }}</span>
+      <span class="navbar-value">{{ playerService.gameStatus() | status }}</span>
     </div>
     <div class="navbar-text">
       Timer:
       <span class="navbar-value">{{ playingTime() | date : "mm:ss" }}</span>
+    </div>
+    <div class=" navbar-switcher absolute">
+      <app-theme-switcher></app-theme-switcher>
     </div>
   </div>
 </ng-template>
 
 <ng-template #mainGrid>
   <div class="view-game__main-grid">
-    <snake-grid class="snake-grid" />
-    <player-ranking-table class="snake-ranking" />
-    <app-gameplay-history-table class="snake-gameplay" />
+    <snake-grid class="snake-grid"/>
+    <player-ranking-table class="snake-top-ranking"/>
+    <app-gameplay-history-table class="snake-gameplay"/>
+    <player-scores-table class="snake-player-ranking"/>
   </div>
 </ng-template>

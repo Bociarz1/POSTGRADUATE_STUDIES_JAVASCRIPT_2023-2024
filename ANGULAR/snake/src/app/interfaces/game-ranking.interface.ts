@@ -1,6 +1,6 @@
 export interface IGameRanking {
   index?: number;
-  playerName: string;
+  name: string;
   score: number;
-  endGameTime: Date;
+  endGameTime?: Date;
 }

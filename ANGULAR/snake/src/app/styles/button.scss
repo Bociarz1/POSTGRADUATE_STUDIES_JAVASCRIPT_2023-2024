@@ -11,7 +11,7 @@
 
   &:hover {
     transition: 0.3s;
-    background-color: $pink;
+    background-color: $textColor;
     box-shadow: 10px 5px 5px #297590;
     transform: rotateY(30deg) rotateX(-25deg);
   }
@@ -20,7 +20,7 @@
 .primary-button {
   height: 30px;
   width: 250px;
-  color: $pink;
+  color: $textColor;
   font-size: 24px;
   text-transform: uppercase;
   background-color: #fff;
@@ -29,7 +29,7 @@
   &:hover {
     cursor: pointer;
     transform: 0.3s;
-    background-color: $pink;
+    background-color: $textColor;
     color: #fff;
   }
 }

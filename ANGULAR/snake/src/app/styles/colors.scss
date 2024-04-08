@@ -1,3 +1,9 @@
-$pink: #cf6793;
-$primary-color: #fff;
-$secondary-color: #00819a;
+:root {
+  --textColor: #cf6793;
+  --primary-color: #fff;
+  --secondary-color: #00819a;
+}
+
+$textColor: var(--textColor);
+$primary-color: var(--primary-color);
+$secondary-color: var(--secondary-color);

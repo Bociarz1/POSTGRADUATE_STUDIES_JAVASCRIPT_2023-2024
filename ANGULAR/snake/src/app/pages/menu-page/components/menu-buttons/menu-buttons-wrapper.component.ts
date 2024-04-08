@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { IMenuButton } from '../../../../interfaces/menu-buttons.interface.ts.js';
-import { menuButtons } from '../../../../consts/menu-buttons.consts.js';
-import { MenuButtonActionEnum } from '../../../../enums/menu-buttons.enum.ts.js';
-import { SnakeService } from '../../../../services/snake.service.js';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {IMenuButton} from '../../../../interfaces/menu-buttons.interface.ts.js';
+import {menuButtons} from '../../../../consts/menu-buttons.consts.js';
+import {MenuButtonActionEnum} from '../../../../enums/menu-buttons.enum.ts.js';
+import {SnakeService} from '../../../../services/snake.service.js';
 
 @Component({
   selector: 'snake-menu-buttons-wrapper',
@@ -15,7 +15,7 @@ import { SnakeService } from '../../../../services/snake.service.js';
 export class MenuButtonsWrapperComponent {
   protected menuButtons: IMenuButton[] = menuButtons;
 
-  constructor(private snakeService: SnakeService) {}
+  private snakeService: SnakeService = inject(SnakeService);
 
   protected handleMenuButtonsClick(action: MenuButtonActionEnum) {
     this.snakeService.menuAction.set(action);

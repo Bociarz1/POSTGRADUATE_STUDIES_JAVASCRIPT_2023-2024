@@ -1,0 +1,12 @@
+<div class="theme-switcher">
+  <div class="theme-switcher__title">Theme switcher</div>
+  <div class="theme-switcher__switcher">
+    <div class="normal" [ngClass]="{'active': isNormalTheme(), 'unactive': !isNormalTheme() }"
+         (click)="handleThemeSwitch(GameThemeEnum.NORMAL)">
+      Normal
+    </div>
+    <div class="high-contrast" [ngClass]="{'active': !isNormalTheme(), 'unactive': isNormalTheme() }"
+         (click)="handleThemeSwitch(GameThemeEnum.HIGH_CONTRAST)">High contrast
+    </div>
+  </div>
+</div>

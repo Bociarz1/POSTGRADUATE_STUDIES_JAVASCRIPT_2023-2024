@@ -1,16 +1,16 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
   <div class="form-control">
     <label class="label">Name</label>
-    <input class="input" type="text" formControlName="playerName" />
-    @if(!form.controls.playerEmail.valid && form.controls.playerEmail.touched) {
-    <span class="form-control__error">NAME CAN NOT BE EMTY!</span>
+    <input class="input" type="text" formControlName="playerName"/>
+    @if (!form.controls.authToken.valid && form.controls.authToken.touched) {
+      <span class="form-control__error">NAME CAN NOT BE EMTY!</span>
     }
   </div>
   <div class="form-control">
-    <label class="label">Email</label>
-    <input class="input" type="text" formControlName="playerEmail" />
-    @if(!form.controls.playerEmail.valid && form.controls.playerEmail.touched) {
-    <span class="form-control__error">ENTER A VALID EMAIL!</span>
+    <label class="label">Token</label>
+    <input class="input" type="text" formControlName="authToken"/>
+    @if (!form.controls.authToken.valid && form.controls.authToken.touched) {
+      <span class="form-control__error">ENTER A VALID TOKEN!</span>
     }
   </div>
   <div class="form-button__wrapper">

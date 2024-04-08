@@ -1,0 +1,45 @@
+@import "../../styles/colors.scss";
+
+.theme-switcher {
+  width: 170px;
+  height: 30px;
+
+  &__title {
+    font-size: 2rem;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  &__switcher {
+    padding: 5px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background-color: #fff;
+    border-radius: 20px;
+
+    .normal {
+      border-radius: 10px 0 0 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: black;
+    }
+
+    .high-contrast {
+      border-radius: 0 10px 10px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: black;
+    }
+
+    .active {
+      background-color: $textColor;
+      color: white;
+    }
+
+    .unactive {
+      cursor: pointer;
+    }
+  }
+}
